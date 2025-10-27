@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"gotodo/todo"
 	"os"
-	"strconv"
 )
 
 func main() {
@@ -18,47 +17,64 @@ func main() {
 
 	switch os.Args[1] {
 
-	case "add":
-		err := service.AddTodo(os.Args[2])
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
+	case CmdAdd:
+		task := os.Args[2]
 
-	case "list":
+		err := service.AddTodo(task)
+
+		ExitOnError(err)
+
+		fmt.Println("✅ Added todo:", task)
+		fmt.Println()
+
+		todos, _ := service.GetTodos()
+
+		PrintTodosTable(todos)
+
+	case CmdList:
 		todos, err := service.GetTodos()
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
 
-		for _, todo := range todos {
-			fmt.Println(todo)
-		}
+		ExitOnError(err)
+		PrintTodosTable(todos)
 
-	case "complete":
-		id, _ := strconv.Atoi(os.Args[2])
+	case CmdComplete:
+		id, _ := ParseID(os.Args[2])
 		err := service.CompleteTodo(id)
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
 
-	case "uncomplete":
-		id, _ := strconv.Atoi(os.Args[2])
+		ExitOnError(err)
+
+		fmt.Println("✅ Completed todo with ID:", id)
+		fmt.Println()
+
+		todos, _ := service.GetTodos()
+
+		PrintTodosTable(todos)
+
+	case CmdUncomplete:
+		id, _ := ParseID(os.Args[2])
 		err := service.UncompleteTodo(id)
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
 
-	case "delete":
-		id, _ := strconv.Atoi(os.Args[2])
+		ExitOnError(err)
+
+		fmt.Println("✅ Uncompleted todo with ID:", id)
+		fmt.Println()
+
+		todos, _ := service.GetTodos()
+
+		PrintTodosTable(todos)
+
+	case CmdDelete:
+		id, _ := ParseID(os.Args[2])
 		err := service.DeleteTodo(id)
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
+
+		ExitOnError(err)
+
+		fmt.Println("✅ Deleted todo with ID:", id)
+		fmt.Println()
+
+		todos, _ := service.GetTodos()
+
+		PrintTodosTable(todos)
 
 	default:
 		fmt.Println("Expected add, list, complete, uncomplete or delete commands.")

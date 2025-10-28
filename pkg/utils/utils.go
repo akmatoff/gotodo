@@ -1,8 +1,9 @@
-package main
+package utils
 
 import (
 	"fmt"
-	"gotodo/todo"
+	"gotodo/internal/todo"
+	"gotodo/pkg/constants"
 	"os"
 	"strconv"
 	"strings"
@@ -22,8 +23,8 @@ func PrintTodosTable(todos []todo.Todo) {
 			t.Id,
 			t.Text,
 			status,
-			t.CreatedAt.Format(DATE_FORMAT),
-			t.CompletedAt.Format(DATE_FORMAT),
+			t.CreatedAt.Format(constants.DATE_FORMAT),
+			t.CompletedAt.Format(constants.DATE_FORMAT),
 		)
 	}
 }

@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
-	"gotodo/todo"
+	"gotodo/internal/todo"
+	"gotodo/pkg/constants"
+	"gotodo/pkg/utils"
 	"os"
 )
 
@@ -17,64 +19,64 @@ func main() {
 
 	switch os.Args[1] {
 
-	case CmdAdd:
+	case constants.CmdAdd:
 		task := os.Args[2]
 
-		err := service.AddTodo(task)
+		_, err := service.AddTodo(task)
 
-		ExitOnError(err)
+		utils.ExitOnError(err)
 
 		fmt.Println("✅ Added todo:", task)
 		fmt.Println()
 
 		todos, _ := service.GetTodos()
 
-		PrintTodosTable(todos)
+		utils.PrintTodosTable(todos)
 
-	case CmdList:
+	case constants.CmdList:
 		todos, err := service.GetTodos()
 
-		ExitOnError(err)
-		PrintTodosTable(todos)
+		utils.ExitOnError(err)
+		utils.PrintTodosTable(todos)
 
-	case CmdComplete:
-		id, _ := ParseID(os.Args[2])
+	case constants.CmdComplete:
+		id, _ := utils.ParseID(os.Args[2])
 		err := service.CompleteTodo(id)
 
-		ExitOnError(err)
+		utils.ExitOnError(err)
 
 		fmt.Println("✅ Completed todo with ID:", id)
 		fmt.Println()
 
 		todos, _ := service.GetTodos()
 
-		PrintTodosTable(todos)
+		utils.PrintTodosTable(todos)
 
-	case CmdUncomplete:
-		id, _ := ParseID(os.Args[2])
+	case constants.CmdUncomplete:
+		id, _ := utils.ParseID(os.Args[2])
 		err := service.UncompleteTodo(id)
 
-		ExitOnError(err)
+		utils.ExitOnError(err)
 
 		fmt.Println("✅ Uncompleted todo with ID:", id)
 		fmt.Println()
 
 		todos, _ := service.GetTodos()
 
-		PrintTodosTable(todos)
+		utils.PrintTodosTable(todos)
 
-	case CmdDelete:
-		id, _ := ParseID(os.Args[2])
+	case constants.CmdDelete:
+		id, _ := utils.ParseID(os.Args[2])
 		err := service.DeleteTodo(id)
 
-		ExitOnError(err)
+		utils.ExitOnError(err)
 
 		fmt.Println("✅ Deleted todo with ID:", id)
 		fmt.Println()
 
 		todos, _ := service.GetTodos()
 
-		PrintTodosTable(todos)
+		utils.PrintTodosTable(todos)
 
 	default:
 		fmt.Println("Expected add, list, complete, uncomplete or delete commands.")

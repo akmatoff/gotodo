@@ -9,11 +9,11 @@ type Service struct {
 	Store Store
 }
 
-func (s *Service) AddTodo(text string) error {
+func (s *Service) AddTodo(text string) (Todo, error) {
 	todos, err := s.Store.Load()
 
 	if err != nil {
-		return err
+		return Todo{}, err
 	}
 
 	newTodo := Todo{
@@ -26,7 +26,25 @@ func (s *Service) AddTodo(text string) error {
 
 	todos = append(todos, newTodo)
 
-	return s.Store.Save(todos)
+	s.Store.Save(todos)
+
+	return newTodo, nil
+}
+
+func (s *Service) GetTodoById(id int) (Todo, error) {
+	todos, err := s.Store.Load()
+
+	if err != nil {
+		return Todo{}, err
+	}
+
+	for _, todo := range todos {
+		if todo.Id == id {
+			return todo, nil
+		}
+	}
+
+	return Todo{}, fmt.Errorf("Todo with ID %d not found", id)
 }
 
 func (s *Service) GetTodos() ([]Todo, error) {
